@@ -1,0 +1,4 @@
+This program, AsciiShop.py, will take an image of a cat from a specified URL, convert that image to greyscale, then to ASCII. It will then print that image as a string, and "invert the color" and print the inverted image as well.
+The code has functionalities to allow flipping the original ASCII image horizontally or vertically, as well as cropping the original image.
+Ideally, I would have liked to include the functionality to use a local image of the user's choice, but I struggled to implement this.
+To work around being unable to find a local image, type N when prompted "Do you have an image of your own? (Y/N)."
