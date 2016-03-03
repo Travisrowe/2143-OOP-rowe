@@ -46,15 +46,6 @@ class RandomCat(object):
     - Saves the image to some location
     @Returns: 
     """
-
-    """
-    def getImage(self):
-        self.name = self.getTimeStamp()
-        getCat(directory=self.path, filename=self.name, format=self.format)
-        self.img = Image.open(self.name+'.'+self.format)
-        
-        self.width, self.height = self.img.size
-    """
     def getImage(self):
         inpt = input("Do you have an image of your own? (Y/N)\n")
         if(inpt == 'Y'):
