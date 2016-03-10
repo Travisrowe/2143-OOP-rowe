@@ -15,7 +15,14 @@ class BalancedSearchTree(object):
         self.root = 1
         self.items = 0
     
-    
+    '''
+    @Name: insert
+    @Description:
+        Finds the place for the given value in the Binary Search Tree and inserts it there.
+    @Params:
+        value - The value that is to be inserted into the list
+    @Returns: None
+    '''
     def insert(self,val):
         # If list (tree) is empty, put value at root
         if self.tree[self.root] == -1:
@@ -65,13 +72,26 @@ class BalancedSearchTree(object):
             self.insertList(list[med+1:len(list)]) #Passes the second half of the list into insertList (rightChild)
 
         
-
+    '''
+    @Name: extend
+    @Description:
+        Doubles the size of the tree by adding arbitrary values (-1) to the extra indices it creates
+    @Params: None
+    @Returns: None
+    '''
     def extend(self):
         temp = [-1 for x in range(self.size)]
         self.tree.extend(temp)
         self.size *= 2
-        #print(self.items)
         
+    '''
+    @Name: find
+    @Description:
+        Finds the given value in the Binary Search Tree
+    @Params:
+        value - The key that is being searched for
+    @Returns: True if the key is in the tree, false otherwise
+    '''
     def find(self,key):
     
         self.comparisons = 1
@@ -97,10 +117,23 @@ class BalancedSearchTree(object):
                     
                 self.comparisons += 1
                 
-                
+    '''
+    @Name: leftChild
+    @Description:
+        Moves the working index to the index where a parent's left child will be put in the list
+    @Params: The current working index (i)
+    @Returns: 2 * i
+    '''
     def leftChild(self,i):
         return 2 * i
-        
+    
+    '''
+    @Name: rightChild
+    @Description:
+        Moves the working index to the index where a parent's right child will be put in the list
+    @Params: The current working index (i)
+    @Returns: 2 * i + 1
+    '''
     def rightChild(self,i):
         return 2 * i + 1
      
@@ -110,19 +143,8 @@ bs = BalancedSearchTree()
 uniqueLength = int(float(input('Number to insert: (1-100000) ')))
 unique = []
 while len(unique) < uniqueLength:   #Creates an unsorted list with uniqueLength number of unique integers
-    r = random.randint(0,99999)
+    r = random.randint(0,99999)     
     if r not in unique:
-        unique.append(r)
+        unique.append(r)            #Fills the list with random integers between 0 and 99,999
 
 bs.insertList(unique)
-
-"""
-random.seed(342345)
-bs = BinarySearchTree(4096)
-for x in range(1000):
-    bs.insert(random.randint(0,99999))
-
-if __name__ == '__main__':
-    
-    print(bs)
-"""
