@@ -242,8 +242,7 @@ class AsciiShop(AsciiImage):
 
         tempAsciiImage = ''.join(ch for ch in self.imageAsAscii)    #Uses a temp list so that the original is not converted to a string
         
-        for c in range(self.newWidth*y1+x1, self.newWidth * y2, self.newWidth):  #Starts the iterator on the correct column, x1, and ends it on the correct row, self.newWidth * y2
-            #if(c >= self.newWidth * y1):    #Checks if the iterator has gotten to the starting row yet
+        for c in range(self.newWidth * y1 + x1, self.newWidth * y2, self.newWidth):  #Starts the iterator on the correct column, x1, and ends it on the correct row, self.newWidth * y2
             print (tempAsciiImage[c:c+x2-x1])   #Prints the rows from the starting x coordinate to the ending one
                                                     #Note: On row 0 (y1 = 0) c+x2-x1 = x2 because on row 0, c = x1.
 
