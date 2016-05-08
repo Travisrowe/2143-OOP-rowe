@@ -219,20 +219,79 @@ class VideoPoker(object):
             
     def checkHand(self,hand):
         for c in hand.getCards():
-            pass
+            print (c, end = "")
 
     def pair(self):
-        pass
+        if len(self.rankCount == 4):
+		    for i in range(10,13): # i will check if the card is a jack or higher
+			    if self.rankCount.get(i) and self.rankCount[i] == 2:
+			        return true
         
     def twoPair(self):
-        pass
+        if len(self.rankCount == 3):
+		    for i in range(3):
+			    if self.rankCount[i] == 2: # If any one of the ranks has the value of 2, it must be a two pair
+				    return true
     
     def threeOfAKind(self):
-        pass
+        if len(self.rankCount == 3):
+		    for i in range (3):
+			    if self.rankCount[i] == 3:
+				    return true
     
+	def fourSevens(self):
+	    if len(self.rankCount == 2):
+			if self.rankCount[7] == 4:
+				return true
+	
+	def fourAcesOrEights(self):
+	    if len(self.rankCount == 2):
+			if self.rankCount[8] == 4 or self.rankCount[13] == 4:
+				return true
+	
+	def fourOfAKind(self):
+		if len(self.rankCount == 2) and fourSevens() == false and fourAcesOrEights == false():
+		    for i in range (2):
+			    if self.rankCount[i] == 4:
+				    return true
+	
+	def fullHouse(self):
+		if len(self.rankCount == 2):
+			if self.rankCount[0] == 3 or self.rankCount[0] == 2:
+				return true
+		
     def flush(self):
-        pass
+        if len(self.suitCount) == 1:
+		    return true
+		
+	def straight(self):
+	    sorted(hand.rankCount)
+		if len(hand.rankCount) == 5 and hand.rankCount[4] - hand.rankCount[0] == 4:
+		    return true
     
+	def straightFlush(self):
+	    return straight() and flush()
+		
+	def royalFlush(self):
+	    sorted(hand.rankCount)
+		if(hand.rankCount[4] == 13):
+		    return straight() and flush()
+
+"""
+Menu: 1-5 to select cards from your hand, 6 to replace, 7 to keep, 9 for exit
+"""
+class GameDriver(object):
+    def __init__(self, score=0):
+	    self.hand = Hand()
+		self.score = score
+	
+	def menu(self):
+	    self.hand.checkHand() # prints user's hand
+		print "1-5. Select card from your hand"
+		print "6. Replace selection"
+		print "7. Keep hand"
+		print "9. Exit"
+		inp = input()
 """
 @Class ClickHandler
 @Description:
