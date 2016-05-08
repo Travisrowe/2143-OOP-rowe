@@ -283,8 +283,8 @@ Menu: 1-5 to select cards from your hand, 6 to replace, 7 to keep, 9 for exit
 class GameDriver(object):
     def __init__(self, score=0, replaceNum = 0):
         self.hand = VideoPoker()
-		self.deck = Deck()
-		self.replaceNum = replaceNum
+        self.deck = Deck()
+        self.replaceNum = replaceNum
         self.score = score
     
     def menu(self):
@@ -297,15 +297,15 @@ class GameDriver(object):
         while selectLoop:
             inp = float(int(input()))
             if inp in range(1-5):
-                self.replaceNum += 1	#Counts the number of cards to be replaced
-				self.deck.add_card(self.hand.cards[inp])	#Adds cards to the bottom of the deck
+                self.replaceNum += 1    #Counts the number of cards to be replaced
+                self.deck.add_card(self.hand.cards[inp])    #Adds cards to the bottom of the deck
                 del self.hand.cards[inp]
             elif inp == 6
-                if self.replaceNum > 0:	#If selections have been made already
-					self.hand.deal(self.replaceNum)
-				else:
-					print "Please select the cards you want to replace."
-				selectLoop = false
+                if self.replaceNum > 0:    #If selections have been made already
+                    self.hand.deal(self.replaceNum)
+                else:
+                    print "Please select the cards you want to replace."
+                selectLoop = false
             elif inp == 7
                 #Check which winning hand user has
                 if self.hand.royalFlush:
@@ -334,11 +334,11 @@ class GameDriver(object):
                     self.score += 0
                 selectLoop = false
             elif inp == 9
-                return "Your final score was %d!" % (self.score)	#Exits the method
-				#selectLoop = false
-			else:
-				print "Please type a valid input!"
-		g = GameDriver(self.score)
+                return "Your final score was %d!" % (self.score)    #Exits the method
+                #selectLoop = false
+            else:
+                print "Please type a valid input!"
+        g = GameDriver(self.score)
 """
 @Class ClickHandler
 @Description:
