@@ -1,0 +1,42 @@
+'''
+Program "Game of Life"
+Name: Travis Rowe
+2/2/2016
+'''
+
+def liveOrDie(self,r,c):
+    """
+    @function: liveOrDie
+    @description: Calculates whether a cell lives or dies based on Game of Life rules
+                             Note: Border tiles are assumed to have "dead" neighbors off the board.
+    @param: int x - Column to check
+    @param: int y - Row to check
+    @returns: Int : 0 = nothing changes , -1 = dies , 1 = birth
+    """    
+    neighbors = []
+    alive = self.currentGen[r][c]
+
+    print(self.getNeighborWindow(r,c))
+
+    #Uses for loops to check if any neighbors of the given tile are off the board. If so, those neighbors are treated as not alive.
+    for rOffset in range(-1,1):
+        for cOffset in range(-1,1):
+            if((r + rOffset) < 0 or (r + rOffset) > self.width):
+                neighbors.append(0)
+            elif((c + cOffset) < 0 or (c + cOffset) > self.height):
+                neighbors.append(0)
+            else:
+                neighbors.append(self.currentGen[r + rOffset][c + cOffset])
+            
+    count = neighbors.count(True)
+
+    if(alive):
+        if count < 2 or count > 3:
+            return -1 
+        else:
+            return 0
+    else:
+        if count == 3:
+            return 1
+        else:
+            return 0 
