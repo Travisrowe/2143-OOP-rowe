@@ -243,60 +243,64 @@ class VideoPoker(object):
         return self.deck.pop_card()
 
     def pair(self, hand):
-        if len(hand.rankCount == 4):
+        if len(hand.rankCount.keys()) == 4:
             for i in range(10,13): # i will check if the card is a jack or higher
-                if hand.rankCount.get(i) and hand.rankCount[i] == 2:
-                    return True
+                if hand.rankCount.get(i):
+                    if hand.rankCount[i] == 2:
+                        return True
         
     def twoPair(self, hand):
-        if len(hand.rankCount == 3):
+        if len(hand.rankCount.keys()) == 3:
             for i in range(3):
-                if hand.rankCount[i] == 2: # If any one of the ranks has the value of 2, it must be a two pair
+                if hand.rankCount[hand.cards[i].rank] == 2: # If any one of the ranks has the value of 2, it must be a two pair
                     return True
-    
     def threeOfAKind(self, hand):
-        if len(hand.rankCount == 3):
+        if len(hand.rankCount.keys()) == 3:
             for i in range (3):
-                if hand.rankCount[i] == 3:
+                if hand.rankCount[hand.cards[i].rank] == 3:
                     return True
     
     def fourSevens(self, hand):
-        if len(hand.rankCount == 2):
-            if hand.rankCount[7] == 4:
-                return True
+        if len(hand.rankCount.keys()) == 2:
+            if hand.rankCount.get(7):
+                if hand.rankCount[7] == 4:
+                    return True
     
     def fourAcesOrEights(self, hand):
-        if len(hand.rankCount == 2):
-            if hand.rankCount[8] == 4 or hand.rankCount[13] == 4:
-                return True
+        if len(hand.rankCount.keys()) == 2:
+            if hand.rankCount.get(8) or hand.rankCount.get(13):
+                if hand.rankCount[8] == 4 or hand.rankCount[13] == 4:
+                    return True
     
     def fourOfAKind(self, hand):
-        if len(hand.rankCount == 2) and fourSevens() == False and fourAcesOrEights == False():
-            for i in range (2):
+        if len(hand.rankCount.keys()) == 2:
+            for i in range(2):
                 if hand.rankCount[i] == 4:
                     return True
     
     def fullHouse(self, hand):
-        if len(hand.rankCount == 2):
+        if len(hand.rankCount.keys()) == 2:
             if hand.rankCount[0] == 3 or hand.rankCount[0] == 2:
                 return True
         
     def flush(self, hand):
-        if len(hand.suitCount) == 1:
+        if len(hand.suitCount.keys()) == 1:
             return True
         
     def straight(self, hand):
-        sorted(hand.rankCount)
-        if len(hand.rankCount) == 5 and hand.rankCount[4] - hand.rankCount[0] == 4:
+        sorted(hand.cards)
+        if len(hand.rankCount) == 5 and hand.cards[4].rank - hand.cards[0].rank == 4:
             return True
     
     def straightFlush(self, hand):
-        return straight() and flush()
+        if self.straight(hand) and self.flush(hand):
+            return True
         
     def royalFlush(self, hand):
-        sorted(hand.rankCount)
-        if(hand.rankCount[4] == 13):
-            return straight() and flush()
+        sorted(hand.cards)
+        if(hand.cards[4] == 13):
+            if self.straight(hand) and self.flush(hand):
+                return True
 
 """
 Menu: 1-5 to select cards from your hand, 6 to replace, 7 to keep, 9 for exit
@@ -307,8 +311,12 @@ class GameDriver(object):
         self.videoPoker = VideoPoker()
         self.replaceNum = replaceNum
         self.score = score
+
+    def finalScore(self, score):
+        print("Your final score was %d!" % (self.score))    #Exits the method
     
     def menu(self):
+        
         selectLoop = True   #Will allow user to select multiple cards
         self.userHand = self.videoPoker.deal()
         while selectLoop:
@@ -326,10 +334,11 @@ class GameDriver(object):
                 if self.replaceNum > 0:    #If selections have been made already
                     
                     for i in range(0,self.replaceNum):  #Fills the hand back up to 5 with some new cards
-                        self.userHand.addCard(self.videoPoker.deck.pop_card)
+                        self.userHand.addCard(self.videoPoker.deck.pop_card())
+                    inp = 7 #Finalizes hand and checks for winning scores
                 else:
                     print("Please select the cards you want to replace.")
-                inp = 7 #Finalizes hand and checks for winning scores
+                
             elif inp == 7:
                 #Check which winning hand user has
                 if self.videoPoker.royalFlush(self.userHand):
@@ -357,14 +366,14 @@ class GameDriver(object):
                 else:
                     self.score += 0
                 print("Your score is now %d" % (self.score))
-                self.userHand.trashHand
+                self.userHand.trashHand #Deletes hand to be refilled on next game
                 selectLoop = False
             elif inp == 9:
-                return "Your final score was %d!" % (self.score)    #Exits the method
-                #selectLoop = False
+                return(self.finalScore(self.score))
             else:
                 print("Please type a valid input!")
-        g = GameDriver(self.score)
+        g = GameDriver(self.score)  #Repeats the game until 9 is entered
+        g.menu()
 """
 @Class ClickHandler
 @Description:
