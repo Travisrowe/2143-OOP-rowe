@@ -1,4 +1,10 @@
-﻿#from graphics import *
+﻿'''
+Travis Rowe
+2143 Object-oriented Programming
+5/8/2016
+'''
+
+#from graphics import *
 import os
 import random
 import time
