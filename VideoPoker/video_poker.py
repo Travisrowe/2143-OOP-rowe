@@ -438,7 +438,11 @@ class Game(clickHandler):
         exit_button = self.addImage(800-(24/2),12,24,24,'C:/Users/Travis/Documents/School Related/2143 - Object-Oriented-Programming/2143-OOP-rowe/2143-OOP-rowe/VideoPoker/images/exit_up.gif')
         
         self.drawImage(exit_button)
-       
+        
+        deal_button = self.addImage(400, 250, 100, 50, 'C:/Users/Travis/Documents/School Related/2143 - Object-Oriented-Programming/2143-OOP-rowe/2143-OOP-rowe/VideoPoker/images/get-deal-button.png')
+
+        self.drawImage(deal_button)
+
         self.draw_hand()
         
             
