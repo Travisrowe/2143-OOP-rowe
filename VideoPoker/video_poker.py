@@ -174,26 +174,6 @@ class Hand(object):
             
         self.cards.append(card)
 
-    '''    
-    def addCard(self,card):
-        self.cards.append(card)
-        self.calculateDictionaries()    #Updates rankCount and suitCount
-        
-    def calculateDictionaries(self):
-        self.rankCount = {}     #Reinitialize to recalculate dicts when new cards are added
-        self.suitCount = {}
-
-        for c in range(len(self.cards)):
-            if not self.cards[c].suit in self.suitCount:
-                self.suitCount[self.cards[c].suit] = 1
-            else:
-                self.suitCount[self.cards[c].suit] += 1
-            
-            if not self.cards[c].rank in self.rankCount:
-                self.rankCount[self.cards[c].rank] = 1
-            else:
-                self.rankCount[self.cards[c].rank] += 1 
-    '''
     def getCards(self):
 
         return self.cards
