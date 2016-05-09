@@ -1,4 +1,4 @@
-from graphics import *
+﻿#from graphics import *
 import os
 import random
 import time
@@ -51,9 +51,9 @@ class GameCardImage(object):
         if value < 10:
             value = '0'+ str(value)
         
-        image = self.path+'/'+self.size+'/'+str(value)+'.gif'
+        #image = self.path+'/'+self.size+'/'+str(value)+'.gif'
         
-        return image
+        #return image
         
     def get_card_back(self):
         return self.path+'/'+self.size+'/'+self.card_back  
@@ -184,6 +184,9 @@ class Hand(object):
     def getPosition(self,card):
         return self.cards.index(card)
         
+    def checkHand(self,hand):
+        for c in hand.getCards():
+            print (c, end = " ")
         
     def trashHand(self):
         self.cards = []
@@ -201,8 +204,9 @@ class Hand(object):
     twoPair() - uses pairs to determine 
     etc....
 """ 
-class VideoPoker(object):
+class VideoPoker(Hand):
     def __init__(self):
+        super().__init__()
         self.deck = Deck()
 
     def deal(self,number=5):
@@ -216,58 +220,54 @@ class VideoPoker(object):
         
     def getCard(self):
         return self.deck.pop_card()
-            
-    def checkHand(self,hand):
-        for c in hand.getCards():
-            print (c, end = " ")
 
     def pair(self):
         if len(hand.rankCount == 4):
             for i in range(10,13): # i will check if the card is a jack or higher
                 if hand.rankCount.get(i) and hand.rankCount[i] == 2:
-                    return true
+                    return True
         
     def twoPair(self):
         if len(hand.rankCount == 3):
             for i in range(3):
                 if hand.rankCount[i] == 2: # If any one of the ranks has the value of 2, it must be a two pair
-                    return true
+                    return True
     
     def threeOfAKind(self):
         if len(hand.rankCount == 3):
             for i in range (3):
                 if hand.rankCount[i] == 3:
-                    return true
+                    return True
     
     def fourSevens(self):
         if len(hand.rankCount == 2):
             if hand.rankCount[7] == 4:
-                return true
+                return True
     
     def fourAcesOrEights(self):
         if len(hand.rankCount == 2):
             if hand.rankCount[8] == 4 or hand.rankCount[13] == 4:
-                return true
+                return True
     
     def fourOfAKind(self):
-        if len(hand.rankCount == 2) and fourSevens() == false and fourAcesOrEights == false():
+        if len(hand.rankCount == 2) and fourSevens() == False and fourAcesOrEights == False():
             for i in range (2):
                 if hand.rankCount[i] == 4:
-                    return true
+                    return True
     
     def fullHouse(self):
         if len(hand.rankCount == 2):
             if hand.rankCount[0] == 3 or hand.rankCount[0] == 2:
-                return true
+                return True
         
     def flush(self):
         if len(hand.suitCount) == 1:
-            return true
+            return True
         
     def straight(self):
         sorted(hand.rankCount)
         if len(hand.rankCount) == 5 and hand.rankCount[4] - hand.rankCount[0] == 4:
-            return true
+            return True
     
     def straightFlush(self):
         return straight() and flush()
@@ -288,25 +288,26 @@ class GameDriver(object):
         self.score = score
     
     def menu(self):
-        selectLoop = true
-        self.hand.checkHand() # prints user's hand
-        print "1-5. Select card from your hand"
-        print "6. Replace selection"
-        print "7. Keep hand"
-        print "9. Exit"
+        selectLoop = True
+        self.hand = self.hand.deal()
         while selectLoop:
-            inp = float(int(input()))
-            if inp in range(1-5):
+            self.hand.checkHand(self.hand) # prints user's hand
+            print("\n1-5. Select card from your hand")
+            print("6. Replace selection")
+            print("7. Keep hand")
+            print("9. Exit")
+            inp = int(float(input()))
+            if inp == 1 or inp == 2 or inp == 3 or inp == 4 or inp == 5:
                 self.replaceNum += 1    #Counts the number of cards to be replaced
-                self.deck.add_card(self.hand.cards[inp])    #Adds cards to the bottom of the deck
-                del self.hand.cards[inp]
-            elif inp == 6
+                self.deck.add_card(self.hand.cards[inp-1])    #Adds cards to the bottom of the deck
+                del self.hand.cards[inp-1]
+            elif inp == 6:
                 if self.replaceNum > 0:    #If selections have been made already
                     self.hand.deal(self.replaceNum)
                 else:
-                    print "Please select the cards you want to replace."
-                selectLoop = false
-            elif inp == 7
+                    print("Please select the cards you want to replace.")
+                selectLoop = False
+            elif inp == 7:
                 #Check which winning hand user has
                 if self.hand.royalFlush:
                     self.score += 800
@@ -332,12 +333,12 @@ class GameDriver(object):
                     self.score += 1
                 else:
                     self.score += 0
-                selectLoop = false
-            elif inp == 9
+                selectLoop = False
+            elif inp == 9:
                 return "Your final score was %d!" % (self.score)    #Exits the method
-                #selectLoop = false
+                #selectLoop = False
             else:
-                print "Please type a valid input!"
+                print("Please type a valid input!")
         g = GameDriver(self.score)
 """
 @Class ClickHandler
@@ -480,4 +481,5 @@ class Game(clickHandler):
         
 if __name__=='__main__':
 
-    g = Game(800, 300)
+    g = GameDriver()
+    print(g.menu())
