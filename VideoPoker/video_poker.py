@@ -153,7 +153,7 @@ class Hand(object):
         self.label = label
         self.rankCount = {}     # Used to calculate pairs, three of a kind, etc.
         self.suitCount = {}     # Used to calculate flush
-        
+
     def addCard(self,card):
         
         if not card.suit in self.suitCount:
@@ -167,7 +167,7 @@ class Hand(object):
             self.rankCount[card.rank] += 1  
             
         self.cards.append(card)
-        
+
     def getCards(self):
 
         return self.cards
@@ -184,6 +184,7 @@ class Hand(object):
     def getPosition(self,card):
         return self.cards.index(card)
         
+    
         
     def trashHand(self):
         self.cards = []
@@ -203,6 +204,7 @@ class Hand(object):
 """ 
 class VideoPoker(object):
     def __init__(self):
+        #super().__init__()
         self.deck = Deck()
 
     def deal(self,number=5):
@@ -212,133 +214,149 @@ class VideoPoker(object):
         for i in range(0,number):
             hand.addCard(self.deck.pop_card())
             
+            
         return hand
         
     def getCard(self):
         return self.deck.pop_card()
-            
+
     def checkHand(self,hand):
         for c in hand.getCards():
             print (c, end = " ")
 
-    def pair(self):
-        if len(hand.rankCount == 4):
-            for i in range(10,13): # i will check if the card is a jack or higher
-                if hand.rankCount.get(i) and hand.rankCount[i] == 2:
-                    return true
+    def pair(self, hand):
+        if len(hand.rankCount.keys()) == 4:
+            for i in range(11,15): # i will check if the card is a jack or higher
+                if hand.rankCount.get(i):
+                    if hand.rankCount[i] == 2:
+                        return True
         
-    def twoPair(self):
-        if len(hand.rankCount == 3):
+    def twoPair(self, hand):
+        if len(hand.rankCount.keys()) == 3:
             for i in range(3):
-                if hand.rankCount[i] == 2: # If any one of the ranks has the value of 2, it must be a two pair
-                    return true
-    
-    def threeOfAKind(self):
-        if len(hand.rankCount == 3):
+                if hand.rankCount[hand.cards[i].rank] == 2: # If any one of the ranks has the value of 2, it must be a two pair
+                    #hand.cards[i].rank iterates through the hand to find the key for rankCount which needs to be checked.
+                    return True
+    def threeOfAKind(self, hand):
+        if len(hand.rankCount.keys()) == 3:
             for i in range (3):
-                if hand.rankCount[i] == 3:
-                    return true
+                if hand.rankCount[hand.cards[i].rank] == 3:
+                    return True
     
-    def fourSevens(self):
-        if len(hand.rankCount == 2):
-            if hand.rankCount[7] == 4:
-                return true
+    def fourSevens(self, hand):
+        if len(hand.rankCount.keys()) == 2:
+            if hand.rankCount.get(7):
+                if hand.rankCount[7] == 4:
+                    return True
     
-    def fourAcesOrEights(self):
-        if len(hand.rankCount == 2):
-            if hand.rankCount[8] == 4 or hand.rankCount[13] == 4:
-                return true
+    def fourAcesOrEights(self, hand):
+        if len(hand.rankCount.keys()) == 2:
+            if hand.rankCount.get(8) or hand.rankCount.get(15):
+                if hand.rankCount[8] == 4 or hand.rankCount[15] == 4:
+                    return True
     
-    def fourOfAKind(self):
-        if len(hand.rankCount == 2) and fourSevens() == false and fourAcesOrEights == false():
-            for i in range (2):
+    def fourOfAKind(self, hand):
+        if len(hand.rankCount.keys()) == 2:
+            for i in range(2):
                 if hand.rankCount[i] == 4:
-                    return true
+                    return True
     
-    def fullHouse(self):
-        if len(hand.rankCount == 2):
-            if hand.rankCount[0] == 3 or hand.rankCount[0] == 2:
-                return true
+    def fullHouse(self, hand):
+        if len(hand.rankCount.keys()) == 2:
+            if hand.rankCount[hand.cards[0].rank] == 3 or hand.rankCount[hand.cards[0].rank] == 2:
+                return True
         
-    def flush(self):
-        if len(hand.suitCount) == 1:
-            return true
+    def flush(self, hand):
+        if len(hand.suitCount.keys()) == 1:
+            return True
         
-    def straight(self):
-        sorted(hand.rankCount)
-        if len(hand.rankCount) == 5 and hand.rankCount[4] - hand.rankCount[0] == 4:
-            return true
+    def straight(self, hand):
+        sorted(hand.cards)
+        if len(hand.rankCount.keys()) == 5 and hand.cards[4].rank - hand.cards[0].rank == 4:
+            return True
     
-    def straightFlush(self):
-        return straight() and flush()
+    def straightFlush(self, hand):
+        if self.straight(hand) and self.flush(hand):
+            return True
         
-    def royalFlush(self):
-        sorted(hand.rankCount)
-        if(hand.rankCount[4] == 13):
-            return straight() and flush()
+    def royalFlush(self, hand):
+        sorted(hand.cards)
+        if(hand.cards[4] == 15):
+            if self.straight(hand) and self.flush(hand):
+                return True
 
 """
 Menu: 1-5 to select cards from your hand, 6 to replace, 7 to keep, 9 for exit
 """
 class GameDriver(object):
     def __init__(self, score=0, replaceNum = 0):
-        self.hand = VideoPoker()
-        self.deck = Deck()
+        self.userHand = Hand()
+        self.videoPoker = VideoPoker()
         self.replaceNum = replaceNum
         self.score = score
+
+    def finalScore(self, score):
+        print("Your final score was %d!" % (self.score))    #Exits the method
     
     def menu(self):
-        selectLoop = true
-        self.hand.checkHand() # prints user's hand
-        print("1-5. Select card from your hand")
-        print("6. Replace selection")
-        print("7. Keep hand")
-        print("9. Exit")
+        
+        selectLoop = True   #Will allow user to select multiple cards
+        self.userHand = self.videoPoker.deal()
         while selectLoop:
-            inp = float(int(input()))
-            if inp in range(1-5):
+            self.userHand.checkHand(self.userHand) # prints user's hand
+            print("\n1-5. Select card from your hand")
+            print("6. Replace selection")
+            print("7. Keep hand")
+            print("9. Exit")
+            inp = int(float(input()))
+            if inp == 1 or inp == 2 or inp == 3 or inp == 4 or inp == 5:
                 self.replaceNum += 1    #Counts the number of cards to be replaced
-                self.deck.add_card(self.hand.cards[inp])    #Adds cards to the bottom of the deck
-                del self.hand.cards[inp]
+                self.videoPoker.deck.add_card(self.userHand.cards[inp-1])    #Adds cards to the bottom of the deck
+                del self.userHand.cards[inp-1]
             elif inp == 6:
                 if self.replaceNum > 0:    #If selections have been made already
-                    self.hand.deal(self.replaceNum)
+                    
+                    for i in range(0,self.replaceNum):  #Fills the hand back up to 5 with some new cards
+                        self.userHand.addCard(self.videoPoker.deck.pop_card())
+                    inp = 7 #Finalizes hand and checks for winning scores
                 else:
                     print("Please select the cards you want to replace.")
-                selectLoop = false
+                
             elif inp == 7:
                 #Check which winning hand user has
-                if self.hand.royalFlush:
+                if self.videoPoker.royalFlush(self.userHand):
                     self.score += 800
-                elif self.hand.fourAcesOrEights:
+                elif self.videoPoker.fourAcesOrEights(self.userHand):
                     self.score += 80
-                elif self.hand.straightFlush:
+                elif self.videoPoker.straightFlush(self.userHand):
                     self.score += 50
-                elif self.hand.fourSevens:
+                elif self.videoPoker.fourSevens(self.userHand):
                     self.score += 50
-                elif self.hand.fourOfAKind:
+                elif self.videoPoker.fourOfAKind(self.userHand):
                     self.score += 25
-                elif self.hand.fullHouse:
+                elif self.videoPoker.fullHouse(self.userHand):
                     self.score += 25
-                elif self.hand.flush:
+                elif self.videoPoker.flush(self.userHand):
                     self.score += 5
-                elif self.hand.straight:
+                elif self.videoPoker.straight(self.userHand):
                     self.score += 4
-                elif self.hand.threeOfAKind:
+                elif self.videoPoker.threeOfAKind(self.userHand):
                     self.score += 3
-                elif self.hand.twoPair:
+                elif self.videoPoker.twoPair(self.userHand):
                     self.score += 2
-                elif self.hand.pair:
+                elif self.videoPoker.pair(self.userHand):
                     self.score += 1
                 else:
                     self.score += 0
-                selectLoop = false
+                print("Your score is now %d" % (self.score))
+                self.userHand.trashHand #Deletes hand to be refilled on next game
+                selectLoop = False
             elif inp == 9:
-                return "Your final score was %d!" % (self.score)    #Exits the method
-                #selectLoop = false
+                return(self.finalScore(self.score))
             else:
                 print("Please type a valid input!")
-        g = GameDriver(self.score)
+        g = GameDriver(self.score)  #Repeats the game until 9 is entered
+        g.menu()
 """
 @Class ClickHandler
 @Description:
@@ -459,7 +477,7 @@ class Game(clickHandler):
         x = 100     # Starting x coord for first card
         y = 100     # Starting y coord for first card
         checkX = 125 #Starting x coord for checkbox of first card
-		checkY = 200 #Starting y coord for checkbox of first card
+        checkY = 200 #Starting y coord for checkbox of first card
         # Take our cards, and turn them into a list of graphics image type.
         cards = self.hand.getCards()
                 
