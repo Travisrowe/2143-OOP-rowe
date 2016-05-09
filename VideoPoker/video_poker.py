@@ -1,4 +1,4 @@
-from graphics import *
+﻿from graphics import *
 import os
 import random
 import time
@@ -27,7 +27,7 @@ class GameCardImage(object):
              'tiny':(),
              }
     
-    def __init__(self,cards_dir="./card_images",back='back_black.gif',size='xsmall'):
+    def __init__(self,cards_dir="C:/Users/Travis/Documents/School Related/2143 - Object-Oriented-Programming/2143-OOP-rowe/2143-OOP-rowe/VideoPoker/card_images",back='back_black.gif',size='xsmall'):
         self.path = cards_dir
         self.card_back = back
         self.size = size
@@ -290,23 +290,23 @@ class GameDriver(object):
     def menu(self):
         selectLoop = true
         self.hand.checkHand() # prints user's hand
-        print "1-5. Select card from your hand"
-        print "6. Replace selection"
-        print "7. Keep hand"
-        print "9. Exit"
+        print("1-5. Select card from your hand")
+        print("6. Replace selection")
+        print("7. Keep hand")
+        print("9. Exit")
         while selectLoop:
             inp = float(int(input()))
             if inp in range(1-5):
                 self.replaceNum += 1    #Counts the number of cards to be replaced
                 self.deck.add_card(self.hand.cards[inp])    #Adds cards to the bottom of the deck
                 del self.hand.cards[inp]
-            elif inp == 6
+            elif inp == 6:
                 if self.replaceNum > 0:    #If selections have been made already
                     self.hand.deal(self.replaceNum)
                 else:
-                    print "Please select the cards you want to replace."
+                    print("Please select the cards you want to replace.")
                 selectLoop = false
-            elif inp == 7
+            elif inp == 7:
                 #Check which winning hand user has
                 if self.hand.royalFlush:
                     self.score += 800
@@ -333,11 +333,11 @@ class GameDriver(object):
                 else:
                     self.score += 0
                 selectLoop = false
-            elif inp == 9
+            elif inp == 9:
                 return "Your final score was %d!" % (self.score)    #Exits the method
                 #selectLoop = false
             else:
-                print "Please type a valid input!"
+                print("Please type a valid input!")
         g = GameDriver(self.score)
 """
 @Class ClickHandler
@@ -417,7 +417,7 @@ class Game(clickHandler):
         self.hand = self.vp.deal()
         self.vp.checkHand(self.hand)
                 
-        exit_button = self.addImage(800-(24/2),12,24,24,'./images/exit_up.gif')
+        exit_button = self.addImage(800-(24/2),12,24,24,'C:/Users/Travis/Documents/School Related/2143 - Object-Oriented-Programming/2143-OOP-rowe/2143-OOP-rowe/VideoPoker/images/exit_up.gif')
         
         self.drawImage(exit_button)
        
@@ -458,7 +458,8 @@ class Game(clickHandler):
 
         x = 100     # Starting x coord for first card
         y = 100     # Starting y coord for first card
-        
+        checkX = 125 #Starting x coord for checkbox of first card
+		checkY = 200 #Starting y coord for checkbox of first card
         # Take our cards, and turn them into a list of graphics image type.
         cards = self.hand.getCards()
                 
