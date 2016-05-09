@@ -298,6 +298,11 @@ class GameDriver(object):
     def finalScore(self, score):
         print("Your final score was %d!" % (self.score))    #Exits the method
     
+    def replaceSelection(replaceNum):   #Same as inp == 6
+        self.videoPoker.deck.add_card()
+        for i in range(0,self.replaceNum):  #Fills the hand back up to 5 with some new cards
+            self.userHand.addCard(self.videoPoker.deck.pop_card())
+
     def menu(self):
         
         selectLoop = True   #Will allow user to select multiple cards
@@ -434,6 +439,7 @@ class Game(clickHandler):
         self.vp = VideoPoker()
         self.hand = self.vp.deal()
         self.vp.checkHand(self.hand)
+        self.menu = GameDriver()
                 
         exit_button = self.addImage(800-(24/2),12,24,24,'C:/Users/Travis/Documents/School Related/2143 - Object-Oriented-Programming/2143-OOP-rowe/2143-OOP-rowe/VideoPoker/images/exit_up.gif')
         
@@ -462,6 +468,7 @@ class Game(clickHandler):
                 except ValueError:
                     "Card Not In List"
                 else:
+
                     self.hand.replaceCard(self.cardIDs.index(clicked),self.vp.getCard())
                 
                 self.draw_hand()
