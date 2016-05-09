@@ -230,7 +230,7 @@ class VideoPoker(object):
 
     def pair(self, hand):
         if len(hand.rankCount.keys()) == 4:
-            for i in range(10,13): # i will check if the card is a jack or higher
+            for i in range(11,15): # i will check if the card is a jack or higher
                 if hand.rankCount.get(i):
                     if hand.rankCount[i] == 2:
                         return True
@@ -255,8 +255,8 @@ class VideoPoker(object):
     
     def fourAcesOrEights(self, hand):
         if len(hand.rankCount.keys()) == 2:
-            if hand.rankCount.get(8) or hand.rankCount.get(13):
-                if hand.rankCount[8] == 4 or hand.rankCount[13] == 4:
+            if hand.rankCount.get(8) or hand.rankCount.get(15):
+                if hand.rankCount[8] == 4 or hand.rankCount[15] == 4:
                     return True
     
     def fourOfAKind(self, hand):
@@ -267,7 +267,7 @@ class VideoPoker(object):
     
     def fullHouse(self, hand):
         if len(hand.rankCount.keys()) == 2:
-            if hand.rankCount[0] == 3 or hand.rankCount[0] == 2:
+            if hand.rankCount[hand.cards[0].rank] == 3 or hand.rankCount[hand.cards[0].rank] == 2:
                 return True
         
     def flush(self, hand):
@@ -276,7 +276,7 @@ class VideoPoker(object):
         
     def straight(self, hand):
         sorted(hand.cards)
-        if len(hand.rankCount) == 5 and hand.cards[4].rank - hand.cards[0].rank == 4:
+        if len(hand.rankCount.keys()) == 5 and hand.cards[4].rank - hand.cards[0].rank == 4:
             return True
     
     def straightFlush(self, hand):
@@ -285,7 +285,7 @@ class VideoPoker(object):
         
     def royalFlush(self, hand):
         sorted(hand.cards)
-        if(hand.cards[4] == 13):
+        if(hand.cards[4] == 15):
             if self.straight(hand) and self.flush(hand):
                 return True
 
