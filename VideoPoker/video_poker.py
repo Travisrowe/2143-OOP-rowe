@@ -259,6 +259,7 @@ class VideoPoker(object):
         if len(hand.rankCount.keys()) == 3:
             for i in range(3):
                 if hand.rankCount[hand.cards[i].rank] == 2: # If any one of the ranks has the value of 2, it must be a two pair
+                    #hand.cards[i].rank iterates through the hand to find the key for rankCount which needs to be checked.
                     return True
     def threeOfAKind(self, hand):
         if len(hand.rankCount.keys()) == 3:
