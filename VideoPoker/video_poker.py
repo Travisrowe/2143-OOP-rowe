@@ -115,7 +115,7 @@ class Card(GameCardImage):
 class Deck(object):
     def __init__(self):
         #assume top of deck = 0th element
-        self.cards = []
+        self.cards = [] #List of the entire deck
         for suit in range(4):
             for rank in range(2,15):
                 self.cards.append(Card(suit,rank))
@@ -153,7 +153,7 @@ class Hand(object):
         self.label = label
         self.rankCount = {}     # Used to calculate pairs, three of a kind, etc.
         self.suitCount = {}     # Used to calculate flush
-        
+
     def addCard(self,card):
         
         if not card.suit in self.suitCount:
@@ -167,7 +167,27 @@ class Hand(object):
             self.rankCount[card.rank] += 1  
             
         self.cards.append(card)
+
+    '''    
+    def addCard(self,card):
+        self.cards.append(card)
+        self.calculateDictionaries()    #Updates rankCount and suitCount
         
+    def calculateDictionaries(self):
+        self.rankCount = {}     #Reinitialize to recalculate dicts when new cards are added
+        self.suitCount = {}
+
+        for c in range(len(self.cards)):
+            if not self.cards[c].suit in self.suitCount:
+                self.suitCount[self.cards[c].suit] = 1
+            else:
+                self.suitCount[self.cards[c].suit] += 1
+            
+            if not self.cards[c].rank in self.rankCount:
+                self.rankCount[self.cards[c].rank] = 1
+            else:
+                self.rankCount[self.cards[c].rank] += 1 
+    '''
     def getCards(self):
 
         return self.cards
@@ -204,9 +224,9 @@ class Hand(object):
     twoPair() - uses pairs to determine 
     etc....
 """ 
-class VideoPoker(Hand):
+class VideoPoker(object):
     def __init__(self):
-        super().__init__()
+        #super().__init__()
         self.deck = Deck()
 
     def deal(self,number=5):
@@ -216,63 +236,64 @@ class VideoPoker(Hand):
         for i in range(0,number):
             hand.addCard(self.deck.pop_card())
             
+            
         return hand
         
     def getCard(self):
         return self.deck.pop_card()
 
-    def pair(self):
+    def pair(self, hand):
         if len(hand.rankCount == 4):
             for i in range(10,13): # i will check if the card is a jack or higher
                 if hand.rankCount.get(i) and hand.rankCount[i] == 2:
                     return True
         
-    def twoPair(self):
+    def twoPair(self, hand):
         if len(hand.rankCount == 3):
             for i in range(3):
                 if hand.rankCount[i] == 2: # If any one of the ranks has the value of 2, it must be a two pair
                     return True
     
-    def threeOfAKind(self):
+    def threeOfAKind(self, hand):
         if len(hand.rankCount == 3):
             for i in range (3):
                 if hand.rankCount[i] == 3:
                     return True
     
-    def fourSevens(self):
+    def fourSevens(self, hand):
         if len(hand.rankCount == 2):
             if hand.rankCount[7] == 4:
                 return True
     
-    def fourAcesOrEights(self):
+    def fourAcesOrEights(self, hand):
         if len(hand.rankCount == 2):
             if hand.rankCount[8] == 4 or hand.rankCount[13] == 4:
                 return True
     
-    def fourOfAKind(self):
+    def fourOfAKind(self, hand):
         if len(hand.rankCount == 2) and fourSevens() == False and fourAcesOrEights == False():
             for i in range (2):
                 if hand.rankCount[i] == 4:
                     return True
     
-    def fullHouse(self):
+    def fullHouse(self, hand):
         if len(hand.rankCount == 2):
             if hand.rankCount[0] == 3 or hand.rankCount[0] == 2:
                 return True
         
-    def flush(self):
+    def flush(self, hand):
         if len(hand.suitCount) == 1:
             return True
         
-    def straight(self):
+    def straight(self, hand):
         sorted(hand.rankCount)
         if len(hand.rankCount) == 5 and hand.rankCount[4] - hand.rankCount[0] == 4:
             return True
     
-    def straightFlush(self):
+    def straightFlush(self, hand):
         return straight() and flush()
         
-    def royalFlush(self):
+    def royalFlush(self, hand):
         sorted(hand.rankCount)
         if(hand.rankCount[4] == 13):
             return straight() and flush()
@@ -282,16 +303,16 @@ Menu: 1-5 to select cards from your hand, 6 to replace, 7 to keep, 9 for exit
 """
 class GameDriver(object):
     def __init__(self, score=0, replaceNum = 0):
-        self.hand = VideoPoker()
-        self.deck = Deck()
+        self.userHand = Hand()
+        self.videoPoker = VideoPoker()
         self.replaceNum = replaceNum
         self.score = score
     
     def menu(self):
-        selectLoop = True
-        self.hand = self.hand.deal()
+        selectLoop = True   #Will allow user to select multiple cards
+        self.userHand = self.videoPoker.deal()
         while selectLoop:
-            self.hand.checkHand(self.hand) # prints user's hand
+            self.userHand.checkHand(self.userHand) # prints user's hand
             print("\n1-5. Select card from your hand")
             print("6. Replace selection")
             print("7. Keep hand")
@@ -299,40 +320,44 @@ class GameDriver(object):
             inp = int(float(input()))
             if inp == 1 or inp == 2 or inp == 3 or inp == 4 or inp == 5:
                 self.replaceNum += 1    #Counts the number of cards to be replaced
-                self.deck.add_card(self.hand.cards[inp-1])    #Adds cards to the bottom of the deck
-                del self.hand.cards[inp-1]
+                self.videoPoker.deck.add_card(self.userHand.cards[inp-1])    #Adds cards to the bottom of the deck
+                del self.userHand.cards[inp-1]
             elif inp == 6:
                 if self.replaceNum > 0:    #If selections have been made already
-                    self.hand.deal(self.replaceNum)
+                    
+                    for i in range(0,self.replaceNum):  #Fills the hand back up to 5 with some new cards
+                        self.userHand.addCard(self.videoPoker.deck.pop_card)
                 else:
                     print("Please select the cards you want to replace.")
-                selectLoop = False
+                inp = 7 #Finalizes hand and checks for winning scores
             elif inp == 7:
                 #Check which winning hand user has
-                if self.hand.royalFlush:
+                if self.videoPoker.royalFlush(self.userHand):
                     self.score += 800
-                elif self.hand.fourAcesOrEights:
+                elif self.videoPoker.fourAcesOrEights(self.userHand):
                     self.score += 80
-                elif self.hand.straightFlush:
+                elif self.videoPoker.straightFlush(self.userHand):
                     self.score += 50
-                elif self.hand.fourSevens:
+                elif self.videoPoker.fourSevens(self.userHand):
                     self.score += 50
-                elif self.hand.fourOfAKind:
+                elif self.videoPoker.fourOfAKind(self.userHand):
                     self.score += 25
-                elif self.hand.fullHouse:
+                elif self.videoPoker.fullHouse(self.userHand):
                     self.score += 25
-                elif self.hand.flush:
+                elif self.videoPoker.flush(self.userHand):
                     self.score += 5
-                elif self.hand.straight:
+                elif self.videoPoker.straight(self.userHand):
                     self.score += 4
-                elif self.hand.threeOfAKind:
+                elif self.videoPoker.threeOfAKind(self.userHand):
                     self.score += 3
-                elif self.hand.twoPair:
+                elif self.videoPoker.twoPair(self.userHand):
                     self.score += 2
-                elif self.hand.pair:
+                elif self.videoPoker.pair(self.userHand):
                     self.score += 1
                 else:
                     self.score += 0
+                print("Your score is now %d" % (self.score))
+                self.userHand.trashHand
                 selectLoop = False
             elif inp == 9:
                 return "Your final score was %d!" % (self.score)    #Exits the method
